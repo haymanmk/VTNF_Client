@@ -63,6 +63,8 @@ NEXT.js can easily add backend code run on node.js to the app, such as REST API,
   - [_document.js](#_document.js)
     - [Customize renderPage](#customize_renderpage)
 - contexts
+  - [Context](#context)
+
 - [theme](#theme) - *override default theme setting*s
 - utils
   - [create-emotion-cache.js](#create-emotion-cache)
@@ -73,7 +75,7 @@ NEXT.js can easily add backend code run on node.js to the app, such as REST API,
 
 ### <a name="default_page"></a>Default Page
 
-The first page shows at user's browser comes from `index.js` in `pages` folder. If you wanna change default page to another one like `login.js`, this can be done by modifying `next.config.js` explained in this [section](#next_config).
+The first page showing on user's browser comes from `index.js` in `pages` folder. If you wanna change default page to another one like `login.js`, this can be done by modifying `next.config.js` explained in this [section](#next_config).
 
 ### <a name="layout" ></a>layout
 
@@ -443,6 +445,16 @@ class CustomDocument extends Document {
 > **Note:** The official document recommend avoiding customizing `getInitialProps` and `renderPage`, if possible.
 
 
+
+### <a name="context"></a>Context
+
+*[Context](https://reactjs.org/docs/context.html#contextprovider) provides a way to pass data through the component tree without having to pass props down manually at every level.*
+
+Typically, data is passed top-down (parent to child) via props in React application, but this can be cumbersome when certain types of props (e.g. locale preference, UI theme) are required by many components within the application. **Context** provides a way to share this kind of values globally between components without having to explicitly pass a prop through every level of component tree.
+
+#### When to Use Context
+
+The use cases can be the current authenticated user, theme, or preferred laguage.
 
 ### <a name="theme"></a>theme
 
