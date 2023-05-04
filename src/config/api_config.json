@@ -1,0 +1,5 @@
+{
+  "content_list_service": {
+    "url": "localhost:4000/content"
+  }
+}

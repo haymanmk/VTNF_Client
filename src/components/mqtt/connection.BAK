@@ -1,0 +1,59 @@
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import mqtt from "mqtt";
+import { url, options } from "../../config/mqtt_config";
+import { storeAction } from "../../redux/state-slice";
+
+const MQTTConnection = () => {
+  const [client, setClient] = useState(null);
+  const dispatch = useDispatch();
+  const { updateClient, updateState } = storeAction;
+
+  useEffect(() => {
+    options.clientId = `mqtt-frontend-${Math.random().toString(16).substring(2, 8)}`;
+    const newClient = mqtt.connect(url, options);
+    setClient(newClient);
+    dispatch(updateClient(newClient));
+    dispatch(updateState("connecting"));
+
+    console.log("new client created", newClient);
+
+    const connectHandler = () => {
+      dispatch(updateState("connected"));
+      console.log("MQTT connected");
+    };
+
+    const errorHandler = (err) => {
+      dispatch(updateState("error"));
+      console.log(`ERROR: ${err}`);
+    };
+
+    const reconnectHandler = () => {
+      dispatch(updateState("reconnect"));
+      console.log("reconnect");
+    };
+
+    const disconnectHandler = () => {
+      dispatch(updateState("disconnect"));
+      console.log("disconnect");
+    };
+
+    if (newClient) {
+      newClient.on("connect", connectHandler);
+      newClient.on("error", errorHandler);
+      newClient.on("reconnect", reconnectHandler);
+      newClient.on("disconnect", disconnectHandler);
+    }
+
+    return () => {
+      if (client) {
+        console.log("cleanup");
+        client.end();
+      }
+    };
+  }, []);
+
+  return <></>;
+};
+
+export default MQTTConnection;
