@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { options } from "../config/mqtt_config";
+import mqtt from "mqtt";
 
 const MQTTClientSlice = createSlice({
   name: "mqtt_client",
@@ -11,9 +13,14 @@ const MQTTClientSlice = createSlice({
     message: {},
   },
   reducers: {
-    connectMQTT: (state, action) => {
-      state.client = action.payload;
-      state.state = "connecting";
+    connectMQTT: (state) => {
+      if (!state.client) {
+        options.clientId = `mqtt-frontend-${Math.random().toString(16).substring(2, 8)}`;
+        let _url = `ws://${location.hostname}/mqtt`;
+        // let _url = `ws://${location.hostname}:8083`;
+        state.client = mqtt.connect(_url, options);
+        state.state = "connecting";
+      }
     },
     disconnectMQTT: (state) => {
       state.client = null;
