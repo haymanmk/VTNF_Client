@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-broker
+spec:
+  selector:
+    matchLabels:
+      app: mqtt-broker
+  template:
+    metadata:
+      labels:
+        app: mqtt-broker
+    spec:
+      containers:
+        - name: mqtt-broker
+          image: eclipse-mosquitto:2
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 1885
+              name: mqtt-port
+            - containerPort: 8083
+              name: mqtt-ws-port
+          volumeMounts:
+            - name: mqtt-config-volume
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+      volumes:
+        - name: mqtt-config-volume
+          configMap:
+            name: mosquitto-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+    # Configuration file for Mosquitto broker
+    # Add ports to listeners
+    listener 1885
+    protocol mqtt
+
+    listener 8083
+    protocol websockets
+
+    # password file directory
+    # password_file ./passwd
+
+    allow_anonymous true

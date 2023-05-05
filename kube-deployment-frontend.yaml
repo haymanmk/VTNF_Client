@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vtnf-frontend
+spec:
+  selector:
+    matchLabels:
+      app: vtnf-frontend
+  template:
+    metadata:
+      labels:
+        app: vtnf-frontend
+    spec:
+      containers:
+        - name: vtnf-frontend
+          image: haymanmk/vtnf-frontend:1.1.2
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000

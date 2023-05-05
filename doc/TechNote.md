@@ -20,10 +20,10 @@ This document is going to trace the code forked from [Material UI](https://githu
   - [emotion with NEXT.js SSR](#emotion_with_nextjs)
   - [CSS selector](#css_selector)
     - [nth-child selector](#nth_child)
-
-- [Redux](https://redux.js.org/)
-
+- [SASS](#sass)
+- [Redux](#redux)
 - [SSG, CSR, SSR](#ssg_csr_ssr)
+- [Shallow Compare](#shallow_compare)
 
 ## <a name="react"></a>React
 
@@ -456,6 +456,12 @@ Typically, data is passed top-down (parent to child) via props in React applicat
 
 The use cases can be the current authenticated user, theme, or preferred laguage.
 
+#### Alternatives
+
+- [Redux](#redux)
+- Recoil
+- MobX
+
 ### <a name="theme"></a>theme
 
 The file in the theme folder, in MUI template, this file is index.js. And it exports a MUI-typed `theme` object created by function `createTheme` included from `@mui/material` package. This `theme` object is going to be implemented in customizing [_app.js] to [override the default theme](#override_default_theme) settings with the ones defined in `theme` object.
@@ -667,7 +673,23 @@ li:nth-child(3n - 1) { }
 .el:nth-child(3n) { }
 ```
 
-## <a name="sag_csr_ssr"></a>SSG, CSR, SSR, and ISR
+## <a name="sass"></a>SASS
+
+---
+
+[SASS](https://sass-lang.com/) is in short of **Syntactically Awesome Style Sheets** which is a CSS extension laguages, for instance, CSS has no variable concept while SASS allows users to define variables and then convert them into regular CSS semantics. The [SASS Basic](https://sass-lang.com/guide) provides an helpful guide to learn from the basic concepts. And for advanced information, it should refer to the [SASS Document](https://sass-lang.com/documentation/).
+
+## <a name="redux"></a>Redux
+
+---
+
+[Redux](https://redux.js.org/) is a tool that help you to manage the global states in your application and makes sure the consistency of these shared state between multiple components. However, if you happen to know the function of [*Context*](#context) that comes with React out of box has many similatities and overlaps with Redux, then you might be wondering which strategy should you choose or is more suitable for your development. Here's a great [article](https://blog.isquaredsoftware.com/2021/01/context-redux-differences/) talks in depth about this, and his [personal opinion](https://blog.isquaredsoftware.com/2021/01/context-redux-differences/#recommendations) is as shown below.
+
+> *My personal opinion is that* ***if you get past 2-3 state-related contexts in an application, you're re-inventing a weaker version of React-Redux and should just switch to using Redux\****.
+
+In addition, Redux provides comprehensive [Documents](https://redux.js.org/introduction/getting-started) on their website, and it's worth taking a look and spending a while to read. And I also believe those Docs is the best learning resource I can find on the web so far.
+
+## <a name="ssg_csr_ssr"></a>SSG, CSR, SSR, and ISR
 
 ---
 
@@ -695,3 +717,62 @@ One image to explain the comparison,
 ### Learning Resources
 
 - [Official Tutorial](https://nextjs.org/learn/foundations/about-nextjs?utm_source=next-site&utm_medium=homepage-cta&utm_campaign=next-website)
+
+
+
+## <a name="shallow_compare"></a>Shallow Compare
+
+---
+
+[**Shallow Compare**](https://reactjs.org/docs/shallow-compare.html) in React performs a [**shallow equality**](https://stackoverflow.com/questions/36084515/how-does-shallow-compare-work-in-react#:~:text=shallow%20comparison%20is%20when%20the,comparisons%20deeper%20into%20the%20properties.) check on current `props` and `nextProps` objects as well as `state` and `nextState` objects. The `shallowCompare` function returns
+
+- **True** if current `props` or `state` object is **different** from the next one.
+- **False** if current `props` or `state` object is **not different** from the next one.
+
+> **Shallow Equal** v.s. **Strict Equal**
+>
+> - **Strict Equal** in javascript is identical to "===". If the two items to be compared are primitive values, then the comparison takes their values into account, when these two values are different, it returns false, and vice versa. When it comes to two objects or arrays, it returns false no matter all the contents in the objects and arrays are same, e.g.
+>
+> ```js
+> // array
+> [1,2,3] === [1,2,3]; // false
+> 
+> // object
+> let obj1 = {key:"value"};
+> let obj2 = {key:"value"};
+> 
+> obj1 === obj2; //false
+> obj1 === obj1; //true
+> ```
+>
+> 
+>
+> - **Shallow Equal** in React deals these objects' comparison by only taking the key and value into judgement without taking the deeper properties such as `type` into account. In a nutshell, if keys or values are different, then it returns false, and it returns true only as they are the same.
+
+
+
+```mermaid
+classDiagram
+classA <|.. classB
+classA:+int number
+classA:increment()
+classA:decrement()
+classB:-int __num
+classB:+int number
+classB:increment()
+classB:decrement()
+
+classA <|.. classC
+classC:+int number
+classC:product()
+
+classA <|.. classD
+classD:factory()
+
+classE <|-- classB
+classE:string str
+classE:greeting()
+
+classE <|.. classC
+```
+
